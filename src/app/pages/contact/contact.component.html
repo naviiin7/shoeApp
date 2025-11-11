@@ -1,0 +1,33 @@
+<section class="min-h-screen flex items-center bg-white py-20">
+    <div class="max-w-3xl mx-auto px-6">
+      <h1 class="text-3xl font-bold mb-4">Contact Us</h1>
+      <p class="text-gray-600 mb-8">Questions? Feedback? We’d love to hear from you.</p>
+  
+      <div *ngIf="submitted" class="mb-4 p-4 bg-green-50 text-green-800 rounded">
+        Thanks — your message was sent (demo).
+      </div>
+  
+      <form (ngSubmit)="submit()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Name</label>
+          <input [(ngModel)]="name" name="name" required class="w-full border px-3 py-2 rounded" />
+        </div>
+  
+        <div>
+          <label class="block text-sm font-medium mb-1">Email</label>
+          <input [(ngModel)]="email" name="email" type="email" required class="w-full border px-3 py-2 rounded" />
+        </div>
+  
+        <div>
+          <label class="block text-sm font-medium mb-1">Message</label>
+          <textarea [(ngModel)]="message" name="message" rows="6" required class="w-full border px-3 py-2 rounded"></textarea>
+        </div>
+  
+        <div class="flex items-center gap-4">
+          <button type="submit" class="bg-sky-500 text-white px-5 py-2 rounded">Send Message</button>
+          <button type="button" class="text-sm text-gray-600" (click)="name=''; email=''; message=''">Reset</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  

@@ -1,0 +1,55 @@
+<header
+  class="site-header fixed top-0 left-0 w-full z-50 bg-white shadow-sm transition-transform duration-300"
+  [ngClass]="{
+    '-translate-y-full': hidden,
+    'bg-white/80 backdrop-blur': scrolled,
+    'bg-transparent': !scrolled
+  }"
+  role="banner"
+>
+  <div class="container mx-auto px-6">
+    <div class="flex items-center justify-between h-[72px]">
+      <!-- logo -->
+      <a routerLink="/" class="flex items-center gap-3 shrink-0">
+        <div class="bg-sky-500 text-white font-bold rounded-md px-3 py-2 text-sm">SV</div>
+        <span class="font-bold text-gray-800 text-lg">Shoe<span class="text-sky-500">Verse</span></span>
+      </a>
+
+      <!-- nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm text-gray-700">
+        <a (click)="navigateToSection('hero')" class="hover:text-sky-600 cursor-pointer">Home</a>
+        <a (click)="navigateToSection('products')" class="hover:text-sky-600 cursor-pointer">Shop</a>
+        <a (click)="navigateToFooter()" class="hover:text-sky-600 cursor-pointer">About</a>
+        <a (click)="navigateToSection('contact')" class="hover:text-sky-600 cursor-pointer">Contact</a>
+      </nav>
+
+      <!-- right actions -->
+      <div class="flex items-center gap-3">
+        <ng-container *ngIf="currentUser; else guestLinks">
+          <span class="text-sm text-gray-700 hidden sm:inline">Hi, {{ currentUser.name }}</span>
+          <a *ngIf="currentUser?.role === 'admin'" routerLink="/admin" class="text-sm text-sky-600 hover:underline">Admin</a>
+          <button (click)="logout()" class="text-sm text-gray-600 hover:text-red-500">Logout</button>
+        </ng-container>
+
+        <ng-template #guestLinks>
+          <a routerLink="/auth/login" class="text-sm px-3 py-1 rounded hover:bg-gray-100">Login</a>
+          <a routerLink="/auth/register" class="text-sm px-3 py-1 rounded bg-sky-500 text-white hover:bg-sky-600">Sign Up</a>
+        </ng-template>
+
+        <!-- mini cart button -->
+        <button (click)="openMiniCart()" class="relative p-2 rounded-md hover:bg-gray-100" aria-label="Open cart">
+          <!-- simple svg cart (guaranteed to render) -->
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M6 6h15l-1.5 9h-11L4 3H2"></path>
+            <circle cx="10" cy="20" r="1.5"></circle>
+            <circle cx="18" cy="20" r="1.5"></circle>
+          </svg>
+
+          <span *ngIf="cartCount > 0" class="absolute -top-2 -right-2 bg-sky-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {{ cartCount }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

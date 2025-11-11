@@ -1,0 +1,22 @@
+/* header component local styles — only affects header */
+.site-header {
+  height: 72px;
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* small visual polish for scrolled state if JS adds classes */
+.site-header.bg-white\/80 {
+  backdrop-filter: blur(6px);
+}
+
+/* ensure header content doesn't wrap unexpectedly */
+.site-header .flex {
+  align-items: center;
+}
+
+/* keep the cart badge above everything */
+.site-header .relative .absolute {
+  z-index: 60;
+}

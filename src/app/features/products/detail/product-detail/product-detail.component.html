@@ -1,0 +1,29 @@
+<div class="max-w-6xl mx-auto px-6 py-12" *ngIf="!loading && product">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <img [src]="product.image" [alt]="product.name" class="w-full h-[520px] object-contain rounded-lg" />
+      <div class="grid grid-cols-4 gap-2 mt-4">
+        <img *ngFor="let g of product.gallery || [product.image]" [src]="g" class="h-20 object-cover rounded" />
+      </div>
+    </div>
+
+    <div>
+      <h1 class="text-3xl font-bold mb-3">{{ product.name }}</h1>
+      <div class="text-2xl text-sky-600 font-bold mb-4">${{ product.price }}</div>
+      <p class="text-gray-600 mb-6">{{ product.description || 'No description yet.' }}</p>
+
+      <div class="flex items-center gap-3 mb-4">
+        <button (click)="decrease()" class="px-3 py-1 border rounded">-</button>
+        <div class="px-4">{{ qty }}</div>
+        <button (click)="increase()" class="px-3 py-1 border rounded">+</button>
+      </div>
+
+      <div class="flex gap-3">
+        <button (click)="addToCart()" class="bg-sky-500 text-white px-6 py-3 rounded">Add to cart</button>
+        <button class="border px-6 py-3 rounded">Buy now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="py-20 text-center">Loading product…</div>

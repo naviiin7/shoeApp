@@ -1,0 +1,21 @@
+:host { display: block; }
+
+/* Use Tailwind @apply where helpful (requires PostCSS) */
+footer {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+
+
+/* small responsive tweaks */
+@media (max-width: 640px) {
+  footer .max-w-7xl { padding-left: 16px; padding-right: 16px; }
+}
+
+/* subtle hover for links */
+a:hover {
+  text-decoration: none;
+}
+
+/* keep the brand pill sharp on small screens */
+.w-10 { @apply flex items-center justify-center; }

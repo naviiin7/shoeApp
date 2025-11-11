@@ -1,0 +1,17 @@
+/* ✅ Tailwind core layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ Optional custom global variables */
+:root {
+  --header-height: 72px;
+}
+
+/* ✅ Push content below fixed header */
+body {
+  padding-top: var(--header-height);
+  background-color: #fff; /* optional, helps with white header background */
+}
+
+/* ✅ You can keep your own global overrides below if needed */

@@ -1,0 +1,30 @@
+<article
+  class="border rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden bg-white"
+>
+  <!-- 🖼️ Product Image -->
+  <div class="w-full h-56 bg-gray-50 relative">
+    <img
+      [src]="product.image"
+      [alt]="product.name || 'Product image'"
+      loading="lazy"
+      class="w-full h-56 object-cover rounded-t-2xl"
+      (error)="onImgError($event)"
+    />
+  </div>
+
+  <!-- 🧾 Product Info -->
+  <div class="p-4 text-left">
+    <h3 class="font-semibold text-gray-800 truncate" title="{{ product.name }}">
+      {{ product.name }}
+    </h3>
+    <p class="text-sm text-gray-500 mb-2">{{ product.brand }}</p>
+    <p class="font-semibold text-sky-600 mb-3">${{ product.price }}</p>
+
+    <button
+      (click)="addToCart()"
+      class="w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600 transition"
+    >
+      Add to Cart
+    </button>
+  </div>
+</article>

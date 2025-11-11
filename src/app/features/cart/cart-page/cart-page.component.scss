@@ -1,0 +1,6 @@
+:host { display: block; }
+
+/* small responsive tweaks */
+@media (max-width: 640px) {
+  img.w-28 { width: 5.5rem; height: 5.5rem; }
+}

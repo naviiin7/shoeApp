@@ -1,0 +1,13 @@
+<div class="max-w-md mx-auto p-6">
+  <h2 class="text-xl mb-4">Register</h2>
+
+  <form (ngSubmit)="register()">
+    <input [(ngModel)]="name" name="name" type="text" placeholder="Full Name" class="w-full mb-3 p-2 border rounded" required />
+    <input [(ngModel)]="email" name="email" type="email" placeholder="Email" class="w-full mb-3 p-2 border rounded" required />
+    <input [(ngModel)]="password" name="password" type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded" required />
+    <input [(ngModel)]="confirm" name="confirm" type="password" placeholder="Confirm Password" class="w-full mb-4 p-2 border rounded" required />
+    <div *ngIf="error" class="text-red-500 mb-3">{{ error }}</div>
+    <button class="w-full py-2 bg-sky-500 text-white rounded">Register</button>
+  </form>
+</div>
+  

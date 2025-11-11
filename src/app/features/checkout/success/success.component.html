@@ -1,0 +1,23 @@
+<section class="min-h-screen flex items-center justify-center px-6 py-12">
+    <div class="max-w-2xl bg-white p-8 rounded shadow text-center">
+      <h2 class="text-2xl font-bold mb-4">Order placed successfully 🎉</h2>
+  
+      <div *ngIf="order">
+        <p class="mb-2">Thank you, <strong>{{ order.shipping?.name }}</strong> — your order <strong>{{ order.id }}</strong> has been received.</p>
+        <p class="text-sm text-gray-600 mb-4">Total: <strong>${{ order.total | number:'1.2-2' }}</strong></p>
+  
+        <div class="text-left bg-gray-50 p-4 rounded mb-4">
+          <div class="text-sm font-medium mb-1">Shipping</div>
+          <div class="text-sm text-gray-700">{{ order.shipping.address }}, {{ order.shipping.city }}</div>
+        </div>
+      </div>
+  
+      <div *ngIf="!order" class="text-sm text-gray-600 mb-4">Redirecting…</div>
+  
+      <div class="flex gap-3 justify-center">
+        <button (click)="continueShopping()" class="bg-sky-500 text-white px-4 py-2 rounded">Continue shopping</button>
+        <a routerLink="/orders" class="px-4 py-2 border rounded text-sm text-gray-600">View orders</a>
+      </div>
+    </div>
+  </section>
+  

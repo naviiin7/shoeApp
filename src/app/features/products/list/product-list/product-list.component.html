@@ -1,0 +1,45 @@
+<section class="px-6 py-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div class="flex items-center gap-3">
+        <input #qinput type="search" [value]="q" (keydown.enter)="onSearch(qinput.value)" placeholder="Search products..." class="border px-3 py-2 rounded" />
+        <button (click)="onSearch(qinput.value)" class="bg-sky-500 text-white px-3 py-2 rounded">Search</button>
+      </div>
+  
+      <div class="flex items-center gap-3">
+        <select (change)="onFilterCategory($event.target.value)" [value]="category || ''" class="border p-2 rounded">
+          <option value="">All categories</option>
+          <option value="running">Running</option>
+          <option value="casual">Casual</option>
+          <option value="hiking">Hiking</option>
+        </select>
+  
+        <select (change)="onSort($event.target.value)" [value]="sort || ''" class="border p-2 rounded">
+          <option value="">Sort</option>
+          <option value="price_asc">Price: low→high</option>
+          <option value="price_desc">Price: high→low</option>
+        </select>
+      </div>
+    </div>
+  
+    <div *ngIf="loading" class="py-20 text-center">Loading...</div>
+  
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div *ngFor="let p of products; let i = index" class="bg-white p-4 rounded-lg shadow" appAnimateOnScroll [style.animationDelay]="i * 0.08 + 's'">
+        <a [routerLink]="['/shop', p.id]">
+          <img [src]="p.image" [alt]="p.name" class="w-full h-48 object-cover rounded mb-3" (error)="this.src='assets/images/placeholder.png'"/>
+        </a>
+  
+        <div class="flex justify-between items-start">
+          <div>
+            <a [routerLink]="['/shop', p.id]" class="font-semibold hover:underline">{{ p.name }}</a>
+            <div class="text-sky-500 font-bold mt-1">${{ p.price }}</div>
+          </div>
+        </div>
+  
+        <div class="mt-3">
+          <button (click)="addToCart(p)" class="w-full bg-sky-500 text-white py-2 rounded">Add to cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  

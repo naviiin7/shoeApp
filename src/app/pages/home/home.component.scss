@@ -1,0 +1,76 @@
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 1s ease-out forwards;
+  }
+  
+  .animate-slideInRight {
+    animation: slideInRight 1s ease-out forwards;
+  }
+  
+
+  .card-hover {
+    transition: all 0.4s ease;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .group:hover img {
+    filter: brightness(1.1);
+    transition: filter 0.4s ease;
+  }
+  
+  .group:hover h3 {
+    color: #0ea5e9; // Tailwind sky-500
+    transition: color 0.3s ease;
+  }
+/* ---------------------------------------------
+   Floating Animation + Tilt Effect for Hero Image
+--------------------------------------------- */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotateY(-5deg) rotateX(0);
+  }
+  50% {
+    transform: translateY(-15px) rotateY(5deg) rotateX(2deg);
+  }
+}
+
+.hero-img {
+  animation: float 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  cursor: pointer;
+  transition: transform 0.7s ease-in-out;
+
+  &:hover {
+    transform: scale(1.6) rotateY(-8deg) rotateX(3deg) translateY(-10px);
+    filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.2))
+            drop-shadow(0 10px 10px rgba(0, 0, 0, 0.1));
+  }
+}
