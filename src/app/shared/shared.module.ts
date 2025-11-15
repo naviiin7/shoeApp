@@ -9,11 +9,14 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MiniCartComponent } from './components/mini-cart/mini-cart.component';
 
+import { ProductCardComponent } from './components/product-card/product-card.component';
+
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
-    MiniCartComponent
+    MiniCartComponent,
+    ProductCardComponent
   ],
   imports: [
     CommonModule,
@@ -24,9 +27,7 @@ import { MiniCartComponent } from './components/mini-cart/mini-cart.component';
     HeaderComponent,
     FooterComponent,
     MiniCartComponent,
-    CommonModule,
-    RouterModule,
-    FormsModule
+    ProductCardComponent
   ]
 })
 export class SharedModule {}
