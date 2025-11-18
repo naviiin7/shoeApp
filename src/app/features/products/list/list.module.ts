@@ -1,9 +1,11 @@
+// src/app/features/products/list/list.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { ListRoutingModule } from './list-routing.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { ProductListComponent } from './product-list/product-list.component';
-
 
 @NgModule({
   declarations: [
@@ -11,7 +13,14 @@ import { ProductListComponent } from './product-list/product-list.component';
   ],
   imports: [
     CommonModule,
-    ListRoutingModule
+    FormsModule,    // <-- required for [(ngModel)]
+    RouterModule,   // <-- required for [routerLink]
+    SharedModule
+  ],
+  exports: [
+    ProductListComponent,
+    FormsModule,
+    RouterModule
   ]
 })
-export class ListModule { }
+export class ProductListModule {}

@@ -1,45 +1,115 @@
-<section class="px-6 py-8 max-w-7xl mx-auto">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-      <div class="flex items-center gap-3">
-        <input #qinput type="search" [value]="q" (keydown.enter)="onSearch(qinput.value)" placeholder="Search products..." class="border px-3 py-2 rounded" />
-        <button (click)="onSearch(qinput.value)" class="bg-sky-500 text-white px-3 py-2 rounded">Search</button>
-      </div>
-  
-      <div class="flex items-center gap-3">
-        <select (change)="onFilterCategory($event.target.value)" [value]="category || ''" class="border p-2 rounded">
-          <option value="">All categories</option>
-          <option value="running">Running</option>
-          <option value="casual">Casual</option>
-          <option value="hiking">Hiking</option>
-        </select>
-  
-        <select (change)="onSort($event.target.value)" [value]="sort || ''" class="border p-2 rounded">
-          <option value="">Sort</option>
-          <option value="price_asc">Price: low→high</option>
-          <option value="price_desc">Price: high→low</option>
-        </select>
-      </div>
+<div class="bg-gray-50 py-16">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- TITLE -->
+    <h2 class="text-3xl font-bold text-center mb-10">All Products</h2>
+
+    <!-- FILTER BAR -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+
+      <!-- Search -->
+      <input
+        [(ngModel)]="search"
+        (input)="onSearch(search)"
+        type="text"
+        placeholder="Search..."
+        class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-sky-400"
+      />
+
+      <!-- Category -->
+      <select
+        [(ngModel)]="category"
+        (change)="onFilterCategory(category)"
+        class="border border-gray-300 rounded-lg px-4 py-2 w-full"
+      >
+        <option value="all">All Categories</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+
+      <!-- Sort -->
+      <select
+        [(ngModel)]="sort"
+        (change)="onSort(sort)"
+        class="border border-gray-300 rounded-lg px-4 py-2 w-full"
+      >
+        <option value="">Sort</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="name-asc">Name A → Z</option>
+      </select>
+
+      <!-- Page Size -->
+      <select
+        [(ngModel)]="pageSize"
+        (change)="changePageSize(pageSize)"
+        class="border border-gray-300 rounded-lg px-4 py-2 w-full"
+      >
+        <option *ngFor="let s of [8, 12, 16, 20, 24]" [value]="s">{{ s }} per page</option>
+      </select>
+
     </div>
-  
-    <div *ngIf="loading" class="py-20 text-center">Loading...</div>
-  
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <div *ngFor="let p of products; let i = index" class="bg-white p-4 rounded-lg shadow" appAnimateOnScroll [style.animationDelay]="i * 0.08 + 's'">
-        <a [routerLink]="['/shop', p.id]">
-          <img [src]="p.image" [alt]="p.name" class="w-full h-48 object-cover rounded mb-3" (error)="this.src='assets/images/placeholder.png'"/>
+
+    <!-- LOADING -->
+    <div *ngIf="loading" class="text-center py-10 text-gray-500">
+      Loading products…
+    </div>
+
+    <!-- NO RESULTS -->
+    <div *ngIf="!loading && filtered.length === 0" class="text-center py-10 text-gray-500">
+      No products found.
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <div
+      *ngIf="!loading && paginated.length > 0"
+      class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    >
+      <article
+        *ngFor="let p of paginated; trackBy: trackById"
+        class="border rounded-2xl shadow-sm hover:shadow-md transition bg-white overflow-hidden"
+      >
+        <a (click)="gotoDetail(p)" class="block cursor-pointer">
+          <img
+            [src]="p.image"
+            [alt]="p.name"
+            class="w-full h-48 object-cover rounded-t-2xl"
+            (error)="onImgError($event)"
+          />
         </a>
-  
-        <div class="flex justify-between items-start">
-          <div>
-            <a [routerLink]="['/shop', p.id]" class="font-semibold hover:underline">{{ p.name }}</a>
-            <div class="text-sky-500 font-bold mt-1">${{ p.price }}</div>
-          </div>
+
+        <div class="p-4 text-left">
+          <h3 class="font-semibold text-gray-800 truncate">{{ p.name }}</h3>
+          <p class="text-sm text-gray-500 mb-2">{{ p.brand }}</p>
+          <p class="font-bold text-sky-600 mb-3">${{ p.price }}</p>
+
+          <button
+            class="w-full bg-sky-500 text-white py-2 rounded-lg hover:bg-sky-600"
+            (click)="gotoDetail(p)"
+          >
+            View Details
+          </button>
         </div>
-  
-        <div class="mt-3">
-          <button (click)="addToCart(p)" class="w-full bg-sky-500 text-white py-2 rounded">Add to cart</button>
-        </div>
-      </div>
+      </article>
     </div>
-  </section>
-  
+
+    <!-- PAGINATION -->
+    <div class="flex justify-center gap-4 mt-10">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 border rounded disabled:opacity-50"
+      >
+        Prev
+      </button>
+
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage * pageSize >= filtered.length"
+        class="px-4 py-2 border rounded disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+
+  </div>
+</div>

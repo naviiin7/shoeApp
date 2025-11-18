@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared.module';
-import { ProductCardComponent } from './product-card/product-card.component'; 
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
   
-    
-       ProductCardComponent
+  
+    DashboardComponent
   ],
   imports: [
     CommonModule,

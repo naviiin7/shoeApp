@@ -1,8 +1,8 @@
-// ✅ src/app/pages/home/home.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../core/services/product.service';
-import { ProductService } from '../../core/services/product.service';
-import { CartService } from '../../core/services/cart.service';
+import { Product } from '../../../core/services/product.service';
+import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
+
 
 @Component({
   selector: 'app-home',

@@ -5,7 +5,7 @@ export interface AppUser {
   id: string;
   name: string;
   email: string;
-  password?: string; 
+  password?: string;
   role?: 'admin' | 'user';
 }
 
@@ -28,16 +28,19 @@ export class AuthService {
       return [];
     }
   }
+
   private saveAllUsers(users: AppUser[]) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
+
   private loadCurrentUser(): AppUser | null {
     try {
-      return JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null') as AppUser | null;
+      return JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null');
     } catch {
       return null;
     }
   }
+
   private saveCurrentUser(u: AppUser | null) {
     if (u) localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(u));
     else localStorage.removeItem(CURRENT_USER_KEY);
@@ -46,6 +49,7 @@ export class AuthService {
   seedDefaultAdmin() {
     const users = this.loadAllUsers();
     const adminEmail = 'admin@shoeverse.local';
+
     if (!users.some(u => u.email === adminEmail)) {
       users.push({
         id: 'u-admin-1',
@@ -55,27 +59,43 @@ export class AuthService {
         role: 'admin'
       });
       this.saveAllUsers(users);
-      console.info('[AuthService] seeded default admin:', adminEmail);
     }
   }
 
   register(name: string, email: string, password: string, role: 'user' | 'admin' = 'user'): Observable<boolean> {
     const users = this.loadAllUsers();
+
     if (users.some(u => u.email === email)) return of(false);
-    const user: AppUser = { id: 'u-' + Date.now(), name, email, password, role };
-    users.push(user);
+
+    const newUser: AppUser = {
+      id: 'u-' + Date.now(),
+      name,
+      email,
+      password, // MUST keep the password for login to compare
+      role
+    };
+
+    users.push(newUser);
     this.saveAllUsers(users);
+
     return of(true);
   }
 
   login(email: string, password: string): Observable<boolean> {
     const users = this.loadAllUsers();
-    const found = users.find(u => u.email === email && u.password === password);
-    if (!found) return of(false);
+    const found = users.find(u => u.email === email);
+
+    // FIXED: compare password separately
+    if (!found || found.password !== password) {
+      return of(false);
+    }
+
     const safeUser: AppUser = { ...found };
     delete safeUser.password;
+
     this.saveCurrentUser(safeUser);
     this.currentUserSubject.next(safeUser);
+
     return of(true);
   }
 

@@ -1,22 +1,23 @@
-// src/app/features/products/products.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
 import { ProductsRoutingModule } from './products-routing.module';
 
-// Import the list sub-module instead of redeclaring the list component here
-import { ListModule } from './list/list.module';
+import { ProductListComponent } from './list/product-list/product-list.component';
+import { ProductDetailComponent } from './detail/product-detail/product-detail.component';
 
 @NgModule({
   declarations: [
-    // keep higher-level or shared product components here (if any)
+    ProductListComponent,
+    ProductDetailComponent
   ],
   imports: [
     CommonModule,
-    ProductsRoutingModule,
-    ListModule
-  ],
-  exports: [
-    ListModule
+    FormsModule,
+    RouterModule,
+    ProductsRoutingModule
   ]
 })
 export class ProductsModule {}
