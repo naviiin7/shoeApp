@@ -1,49 +1,40 @@
-<section class="max-w-4xl mx-auto px-6 py-12">
-  <h1 class="text-2xl font-bold mb-4">Payment</h1>
+<div class="max-w-3xl mx-auto py-16 px-4">
+  <h2 class="text-3xl font-bold mb-6">Payment</h2>
 
-  <div class="bg-white p-6 rounded shadow space-y-4">
+  <form (ngSubmit)="pay()" class="space-y-6 bg-white p-6 rounded shadow">
+
+    <!-- Payment Method -->
     <div>
-      <h3 class="font-medium">Shipping to</h3>
-      <div class="text-sm text-gray-600">
-        <div *ngIf="draft?.shipping">
-          {{ draft?.shipping?.name }} — {{ draft?.shipping?.address }}, {{ draft?.shipping?.city }}
-        </div>
+      <label class="font-semibold">Payment Method</label>
+      <select [(ngModel)]="method" name="method"
+        class="w-full mt-2 border p-3 rounded">
+        <option value="card">Credit / Debit Card</option>
+        <option value="cod">Cash on Delivery</option>
+      </select>
+    </div>
+
+    <!-- Card Fields -->
+    <div *ngIf="method === 'card'" class="space-y-4">
+
+      <input type="text" placeholder="Card Number" [(ngModel)]="card.number" name="cardNumber"
+        class="w-full border p-3 rounded" required />
+
+      <div class="grid grid-cols-2 gap-4">
+        <input type="text" placeholder="MM/YY" [(ngModel)]="card.exp" name="exp"
+          class="w-full border p-3 rounded" required />
+
+        <input type="text" placeholder="CVV" [(ngModel)]="card.cvv" name="cvv"
+          class="w-full border p-3 rounded" required />
       </div>
     </div>
 
-    <div>
-      <h3 class="font-medium">Payment method</h3>
-      <div class="mt-2 space-y-2">
-        <label class="flex items-center gap-3">
-          <input type="radio" name="method" [(ngModel)]="payment.method" value="mock" /> <span>Card (mock)</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="radio" name="method" [(ngModel)]="payment.method" value="cod" /> <span>Cash on delivery</span>
-        </label>
-      </div>
-    </div>
+    <button type="submit"
+      [disabled]="submitting"
+      class="bg-sky-500 text-white px-6 py-3 rounded w-full flex justify-center disabled:opacity-50">
 
-    <div *ngIf="payment.method === 'mock'">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <input [(ngModel)]="payment.cardName" name="cardName" placeholder="Name on card" class="border px-3 py-2 rounded" />
-        <input [(ngModel)]="payment.cardNumber" name="cardNumber" placeholder="Card number" class="border px-3 py-2 rounded" />
-      </div>
-      <div class="grid grid-cols-2 gap-3 mt-3">
-        <input [(ngModel)]="payment.exp" name="exp" placeholder="MM/YY" class="border px-3 py-2 rounded" />
-        <input [(ngModel)]="payment.cvv" name="cvv" placeholder="CVV" class="border px-3 py-2 rounded" />
-      </div>
-    </div>
+      <span *ngIf="!submitting">Complete Payment</span>
+      <span *ngIf="submitting">Processing…</span>
+    </button>
 
-    <div class="flex items-center gap-3 mt-4">
-      <input type="checkbox" [(ngModel)]="acceptTerms" name="terms" />
-      <div class="text-sm text-gray-600">I accept the terms and conditions.</div>
-    </div>
-
-    <div class="flex items-center justify-between mt-6">
-      <a routerLink="/checkout/shipping" class="text-sm text-gray-600 hover:underline">Back</a>
-      <button (click)="placeOrder()" [disabled]="loading" class="bg-sky-500 text-white px-6 py-2 rounded">
-        {{ loading ? 'Processing...' : 'Place order' }}
-      </button>
-    </div>
-  </div>
-</section>
+  </form>
+</div>

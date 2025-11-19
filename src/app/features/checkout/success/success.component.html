@@ -1,23 +1,102 @@
-<section class="min-h-screen flex items-center justify-center px-6 py-12">
-    <div class="max-w-2xl bg-white p-8 rounded shadow text-center">
-      <h2 class="text-2xl font-bold mb-4">Order placed successfully 🎉</h2>
-  
-      <div *ngIf="order">
-        <p class="mb-2">Thank you, <strong>{{ order.shipping?.name }}</strong> — your order <strong>{{ order.id }}</strong> has been received.</p>
-        <p class="text-sm text-gray-600 mb-4">Total: <strong>${{ order.total | number:'1.2-2' }}</strong></p>
-  
-        <div class="text-left bg-gray-50 p-4 rounded mb-4">
-          <div class="text-sm font-medium mb-1">Shipping</div>
-          <div class="text-sm text-gray-700">{{ order.shipping.address }}, {{ order.shipping.city }}</div>
+<div class="max-w-3xl mx-auto px-6 py-14">
+
+  <!-- Loading -->
+  <div *ngIf="!order" class="text-center text-gray-600 py-20">
+    Processing your order...
+  </div>
+
+  <!-- Success Card -->
+  <div *ngIf="order" class="bg-white shadow-lg rounded-2xl p-8">
+
+    <!-- Icon + Heading -->
+    <div class="text-center mb-6">
+      <div class="mx-auto mb-4 w-20 h-20 flex items-center justify-center rounded-full bg-green-100">
+        <span class="text-4xl text-green-600">✓</span>
+      </div>
+
+      <h1 class="text-3xl font-bold text-gray-800">Order Successful!</h1>
+      <p class="text-gray-600 mt-2">
+        Thank you for your purchase. Your order has been placed successfully.
+      </p>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="mt-8">
+      <h2 class="font-semibold text-lg mb-3">Order Summary</h2>
+
+      <div class="bg-gray-50 p-4 rounded-lg space-y-2 text-sm text-gray-700">
+        <div class="flex justify-between">
+          <span>Order ID</span>
+          <span class="font-medium">{{ order.id }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Date</span>
+          <span>{{ order.date | date:'medium' }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Total Amount</span>
+          <span class="text-sky-600 font-semibold text-lg">
+            ${{ order.total.toFixed(2) }}
+          </span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Payment Method</span>
+          <span>{{ order.payment }}</span>
         </div>
       </div>
-  
-      <div *ngIf="!order" class="text-sm text-gray-600 mb-4">Redirecting…</div>
-  
-      <div class="flex gap-3 justify-center">
-        <button (click)="continueShopping()" class="bg-sky-500 text-white px-4 py-2 rounded">Continue shopping</button>
-        <a routerLink="/orders" class="px-4 py-2 border rounded text-sm text-gray-600">View orders</a>
+    </div>
+
+    <!-- Items -->
+    <div class="mt-8">
+      <h2 class="font-semibold text-lg mb-3">Items</h2>
+
+      <div class="space-y-4">
+        <div *ngFor="let it of order.items"
+             class="flex items-center gap-4 p-3 border rounded-lg bg-white">
+
+          <img
+            [src]="it.product?.image"
+            class="w-20 h-20 object-cover rounded"
+            alt="Product"
+          />
+
+          <div class="flex-1">
+            <div class="font-semibold text-gray-800">
+              {{ it.product?.name }}
+            </div>
+
+            <div class="text-gray-500 text-sm">
+              Qty: {{ it.qty }}
+            </div>
+
+            <div class="text-sky-600 font-semibold">
+              ${{ (it.product?.price * it.qty).toFixed(2) }}
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
-  </section>
-  
+
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4 mt-10">
+
+      <button
+        (click)="goToOrders()"
+        class="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition">
+        View My Orders
+      </button>
+
+      <button
+        (click)="continueShopping()"
+        class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+        Continue Shopping
+      </button>
+
+    </div>
+  </div>
+
+</div>

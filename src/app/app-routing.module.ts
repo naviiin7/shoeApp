@@ -1,3 +1,4 @@
+// src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -26,16 +27,22 @@ const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
   },
 
-  // ✅ ADD THIS
+  // NEW: orders lazy route
+  {
+    path: 'orders',
+    loadChildren: () => import('./features/orders/orders.module').then(m => m.OrdersModule)
+
+  },
+
   {
     path: 'shop',
     loadChildren: () =>
       import('./features/products/products.module').then(m => m.ProductsModule)
   },
+  
 
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

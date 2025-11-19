@@ -1,51 +1,41 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrderService, ShippingInfo } from '../../../core/services/order.service';
-import { CartService } from '../../../core/services/cart.service';
+import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-shipping',
-  templateUrl: './shipping.component.html',
-  styleUrls: ['./shipping.component.scss']
+  templateUrl: './shipping.component.html'
 })
 export class ShippingComponent {
-  shipping: ShippingInfo = {
+  model: any = {
     name: '',
     email: '',
     phone: '',
     address: '',
     city: '',
-    state: '',
     zip: '',
-    country: ''
   };
 
   submitting = false;
   cartEmpty = false;
 
-  constructor(private orderService: OrderService, private cart: CartService, private router: Router) {
+  constructor(private cart: CartService, private router: Router) {}
+
+  ngOnInit() {
+    const saved = JSON.parse(localStorage.getItem('sv_checkout_shipping') || 'null');
+    if (saved) this.model = saved;
+
     this.cartEmpty = this.cart.getItems().length === 0;
   }
 
   proceed() {
-    if (this.cartEmpty) {
-      alert('Your cart is empty. Add items before checkout.');
-      return;
-    }
-
-    // very basic validation
-    if (!this.shipping.name || !this.shipping.email || !this.shipping.address || !this.shipping.city) {
-      alert('Please fill name, email, address and city.');
-      return;
-    }
+    if (this.cartEmpty) return;
 
     this.submitting = true;
-    // store draft in OrderService then navigate to payment
-    this.orderService.setDraft({ shipping: this.shipping });
+
     setTimeout(() => {
-      this.submitting = false;
+      localStorage.setItem('sv_checkout_shipping', JSON.stringify(this.model));
       this.router.navigate(['/checkout/payment']);
-    }, 400);
-    
+    }, 800);
   }
 }

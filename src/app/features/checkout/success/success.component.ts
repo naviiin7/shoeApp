@@ -1,34 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/features/checkout/success/success.component.ts
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrderService } from '../../../core/services/order.service';
+import { CartService } from 'src/app/core/services/cart.service';
+import { OrderService } from 'src/app/core/services/order.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  selector: 'app-checkout-success',
-  templateUrl: './success.component.html',
-  styleUrls: ['./success.component.scss']
+  selector: 'app-success',
+  templateUrl: './success.component.html'
 })
-export class SuccessComponent implements OnInit {
-  orderId?: string | null;
-  order: any;
+export class SuccessComponent {
 
-  constructor(private router: Router, private orderService: OrderService) {
-    // read order id from history state (router.navigate state)
-    const st = history.state;
-    this.orderId = st?.orderId;
-    if (this.orderId) {
-      this.order = this.orderService.getOrders().find((o: any) => o.id === this.orderId);
+  order: any = null;
+
+  constructor(
+    private cart: CartService,
+    private orders: OrderService,
+    private router: Router,
+    private auth: AuthService
+  ) {}
+
+  ngOnInit() {
+    const shipping = JSON.parse(localStorage.getItem('sv_checkout_shipping') || 'null');
+    const payment = localStorage.getItem('sv_checkout_payment');
+    const items = this.cart.getItems();
+
+    if (!shipping || !payment || items.length === 0) {
+      this.router.navigate(['/']);
+      return;
     }
+
+    const total = items.reduce((s, i) => s + (i.product.price || 0) * i.qty, 0);
+
+    const user = this.auth.getCurrentUser();
+    const userId = user?.id || 'guest';
+
+    this.orders.createOrder(items, shipping, payment, total, userId)
+      .subscribe(order => {
+        this.order = order;
+
+        this.cart.clear();
+        localStorage.removeItem('sv_checkout_shipping');
+        localStorage.removeItem('sv_checkout_payment');
+      });
   }
 
-  ngOnInit(): void {
-    if (!this.orderId) {
-      // if someone lands here directly, go to home
-      // small delay so UI shows
-      setTimeout(() => this.router.navigateByUrl('/'), 800);
-    }
+  goToOrders() {
+    this.router.navigate(['/orders']);
   }
 
   continueShopping() {
-    this.router.navigateByUrl('/shop');
+    this.router.navigate(['/']);
   }
 }

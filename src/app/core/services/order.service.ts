@@ -1,87 +1,73 @@
+// src/app/core/services/order.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CartItem } from './cart.service';
-
-export interface ShippingInfo {
-  name: string;
-  email: string;
-  phone?: string;
-  address: string;
-  city: string;
-  state?: string;
-  zip?: string;
-  country?: string;
-}
-
-export interface PaymentInfo {
-  method: 'card' | 'cod' | 'mock';
-  cardName?: string;
-  cardNumber?: string;
-  exp?: string;
-  cvv?: string;
-}
 
 export interface Order {
   id: string;
   items: CartItem[];
-  shipping: ShippingInfo;
-  payment: PaymentInfo;
+  shipping: any;
+  payment: string;
   total: number;
-  createdAt: string;
+  date: string;
+  userId: string;   // ← ADDED
 }
 
-const ORDERS_KEY = 'shoe_orders_v1';
+const ORDERS_KEY = 'sv_orders';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class OrderService {
-  private draft$ = new BehaviorSubject<{ shipping?: ShippingInfo; payment?: PaymentInfo } | null>(null);
 
   constructor() {}
 
-  setDraft(draft: { shipping?: ShippingInfo; payment?: PaymentInfo }) {
-    this.draft$.next(draft);
+  private loadOrders(): Order[] {
+    try {
+      return JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+    } catch {
+      return [];
+    }
   }
 
-  getDraft() {
-    return this.draft$.getValue();
+  private saveOrders(list: Order[]) {
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(list));
   }
 
-  clearDraft() {
-    this.draft$.next(null);
-  }
+  /** Create a new order */
+  createOrder(
+    items: CartItem[],
+    shipping: any,
+    payment: string,
+    total: number,
+    userId: string
+  ): Observable<Order> {
 
-  createOrder(items: CartItem[], shipping: ShippingInfo, payment: PaymentInfo): Order {
-    const total = items.reduce((s, it) => s + it.qty * (it.product.price || 0), 0);
-    const id = 'ORD-' + Date.now();
-    const order: Order = {
-      id,
+    const orders = this.loadOrders();
+
+    const newOrder: Order = {
+      id: 'ord-' + Date.now(),
       items,
       shipping,
       payment,
       total,
-      createdAt: new Date().toISOString()
+      date: new Date().toISOString(),
+      userId: userId || 'guest'   // ← VERY IMPORTANT
     };
 
-    // persist (append) in localStorage for demo
-    try {
-      const raw = localStorage.getItem(ORDERS_KEY);
-      const arr = raw ? JSON.parse(raw) : [];
-      arr.unshift(order);
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(arr));
-    } catch (e) {
-      console.warn('Could not persist order', e);
-    }
+    orders.push(newOrder);
+    this.saveOrders(orders);
 
-    this.clearDraft();
-    return order;
+    return of(newOrder);
   }
 
-  getOrders(): Order[] {
-    try {
-      const raw = localStorage.getItem(ORDERS_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
+  /** Get all orders */
+  getAllOrders(): Observable<Order[]> {
+    return of(this.loadOrders());
+  }
+
+  /** Get one order by ID */
+  getOrderById(id: string): Order | undefined {
+    return this.loadOrders().find(o => o.id === id);
   }
 }
