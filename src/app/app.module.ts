@@ -1,3 +1,4 @@
+// src/app/app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +11,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { MainLayoutModule } from './layouts/main-layout/main-layout.module';
 
-import { ProductsModule } from './features/products/products.module';
+// NOTE: ProductsModule removed from eager imports (it is lazy-loaded via AppRoutingModule)
 
 @NgModule({
   declarations: [
@@ -23,9 +24,8 @@ import { ProductsModule } from './features/products/products.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     SharedModule,
-    MainLayoutModule,
-
-    ProductsModule
+    MainLayoutModule
+    // DON'T import ProductsModule here when you lazy-load it elsewhere
   ],
   providers: [],
   bootstrap: [AppComponent],

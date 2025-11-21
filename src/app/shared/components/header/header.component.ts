@@ -4,7 +4,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { CartService } from '../../../core/services/cart.service';
 import { CartUiService } from '../../../core/services/cart-ui.service';
-import { AuthService, AppUser } from '../../../core/services/auth.service';  
+import { AuthService, AppUser } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -17,11 +17,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   scrolled = false;
   cartCount = 0;
 
-  currentUser: AppUser | null = null; 
+  currentUser: AppUser | null = null;
 
   private scrollSub: Subscription | null = null;
   private cartSub: Subscription | null = null;
-  private authSub: Subscription | null = null; 
+  private authSub: Subscription | null = null;
   private lastScroll = 0;
 
   private readonly SMALL_DELTA = 8;
@@ -32,14 +32,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private cart: CartService,
     private ui: CartUiService,
     private zone: NgZone,
-    private auth: AuthService 
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
+    // cart count subscription
     this.cartSub = this.cart.cart$.subscribe(items => {
-      this.cartCount = items.reduce((s, i) => s + i.qty, 0);
+      this.cartCount = Array.isArray(items) ? items.reduce((s, i) => s + (i.qty || 0), 0) : 0;
     });
 
+    // auth subscription
     this.authSub = this.auth.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
@@ -56,7 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.scrollSub?.unsubscribe();
     this.cartSub?.unsubscribe();
-    this.authSub?.unsubscribe(); 
+    this.authSub?.unsubscribe();
   }
 
   private onWindowScroll() {
@@ -118,8 +120,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const y = footer.getBoundingClientRect().top + window.scrollY - 80;
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
-  
-  
 
   private scrollToElementById(sectionId: string) {
     const el = document.getElementById(sectionId);

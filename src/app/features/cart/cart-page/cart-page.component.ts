@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CartItem, CartService } from '../../../core/services/cart.service';
 import { Router } from '@angular/router';
+import { OrderService } from 'src/app/core/services/order.service';
 
 @Component({
   selector: 'app-cart-page',
@@ -9,22 +10,25 @@ import { Router } from '@angular/router';
   styleUrls: ['./cart-page.component.scss']
 })
 export class CartPageComponent implements OnInit, OnDestroy {
+
   items: CartItem[] = [];
   sub: Subscription | null = null;
+  submitting = false;
 
-  constructor(public cart: CartService, private router: Router) {}
+  constructor(
+    public cart: CartService,
+    private orders: OrderService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.sub = this.cart.cart$.subscribe(v => this.items = v);
+    this.sub = this.cart.cart$.subscribe(v => this.items = v || []);
   }
 
   updateQty(item: CartItem, delta: number) {
     const newQty = item.qty + delta;
-    if (newQty <= 0) {
-      this.cart.remove(item.product.id);
-    } else {
-      this.cart.updateQty(item.product.id, newQty);
-    }
+    if (newQty <= 0) this.cart.remove(item.product.id);
+    else this.cart.updateQty(item.product.id, newQty);
   }
 
   remove(item: CartItem) {
@@ -36,7 +40,26 @@ export class CartPageComponent implements OnInit, OnDestroy {
   }
 
   checkout() {
-    alert(`Checkout stub — total: $${this.cart.getTotalPrice().toFixed(2)}`);
+    const shipping = JSON.parse(localStorage.getItem('sv_checkout_shipping') || 'null');
+    const payment = JSON.parse(localStorage.getItem('sv_checkout_payment') || 'null');
+
+    if (!shipping || !payment) {
+      this.router.navigate(['/checkout/shipping']);
+      return;
+    }
+
+    if (!this.items.length) return;
+
+    const total = this.cart.getTotalPrice();
+    this.submitting = true;
+
+    this.orders.createOrder(this.items, shipping, payment, total).subscribe({
+      next: (o) => {
+        this.cart.clear();
+        this.router.navigate(['/checkout/success'], { state: { orderId: o.id } });
+      },
+      complete: () => this.submitting = false
+    });
   }
 
   continueShopping() {

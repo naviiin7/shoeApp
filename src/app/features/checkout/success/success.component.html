@@ -1,102 +1,56 @@
 <div class="max-w-3xl mx-auto px-6 py-14">
-
-  <!-- Loading -->
-  <div *ngIf="!order" class="text-center text-gray-600 py-20">
+  <div *ngIf="loading" class="text-center text-gray-600 py-20">
     Processing your order...
   </div>
 
-  <!-- Success Card -->
   <div *ngIf="order" class="bg-white shadow-lg rounded-2xl p-8">
-
-    <!-- Icon + Heading -->
     <div class="text-center mb-6">
       <div class="mx-auto mb-4 w-20 h-20 flex items-center justify-center rounded-full bg-green-100">
         <span class="text-4xl text-green-600">✓</span>
       </div>
-
       <h1 class="text-3xl font-bold text-gray-800">Order Successful!</h1>
-      <p class="text-gray-600 mt-2">
-        Thank you for your purchase. Your order has been placed successfully.
-      </p>
+      <p class="text-gray-600 mt-2">Thank you for your purchase. Your order has been placed successfully.</p>
     </div>
 
-    <!-- Order Summary -->
     <div class="mt-8">
       <h2 class="font-semibold text-lg mb-3">Order Summary</h2>
-
       <div class="bg-gray-50 p-4 rounded-lg space-y-2 text-sm text-gray-700">
         <div class="flex justify-between">
           <span>Order ID</span>
           <span class="font-medium">{{ order.id }}</span>
         </div>
-
         <div class="flex justify-between">
           <span>Date</span>
           <span>{{ order.date | date:'medium' }}</span>
         </div>
-
         <div class="flex justify-between">
           <span>Total Amount</span>
-          <span class="text-sky-600 font-semibold text-lg">
-            ${{ order.total.toFixed(2) }}
-          </span>
+          <span class="text-sky-600 font-semibold text-lg">${{ order.total.toFixed(2) }}</span>
         </div>
-
         <div class="flex justify-between">
           <span>Payment Method</span>
-          <span>{{ order.payment }}</span>
+          <span>{{ order.payment?.method || order.payment || '—' }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Items -->
     <div class="mt-8">
       <h2 class="font-semibold text-lg mb-3">Items</h2>
-
       <div class="space-y-4">
-        <div *ngFor="let it of order.items"
-             class="flex items-center gap-4 p-3 border rounded-lg bg-white">
-
-          <img
-            [src]="it.product?.image"
-            class="w-20 h-20 object-cover rounded"
-            alt="Product"
-          />
-
+        <div *ngFor="let it of order.items" class="flex items-center gap-4 p-3 border rounded-lg bg-white">
+          <img [src]="it.product?.image || 'assets/images/placeholder.png'" class="w-20 h-20 object-cover rounded" alt="Product" />
           <div class="flex-1">
-            <div class="font-semibold text-gray-800">
-              {{ it.product?.name }}
-            </div>
-
-            <div class="text-gray-500 text-sm">
-              Qty: {{ it.qty }}
-            </div>
-
-            <div class="text-sky-600 font-semibold">
-              ${{ (it.product?.price * it.qty).toFixed(2) }}
-            </div>
+            <div class="font-semibold text-gray-800">{{ it.product?.name }}</div>
+            <div class="text-gray-500 text-sm">Qty: {{ it.qty }}</div>
+            <div class="text-sky-600 font-semibold">${{ ((it.product?.price ?? it.price) * it.qty).toFixed(2) }}</div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- Buttons -->
     <div class="flex justify-center gap-4 mt-10">
-
-      <button
-        (click)="goToOrders()"
-        class="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition">
-        View My Orders
-      </button>
-
-      <button
-        (click)="continueShopping()"
-        class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-        Continue Shopping
-      </button>
-
+      <button (click)="goToOrders()" class="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700">View My Orders</button>
+      <button (click)="continueShopping()" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Continue Shopping</button>
     </div>
   </div>
-
 </div>

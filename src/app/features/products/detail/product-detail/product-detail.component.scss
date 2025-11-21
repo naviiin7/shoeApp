@@ -1,1 +1,48 @@
-:host { display:block; }
+/* Dark / Spotify-ish styling for product detail */
+.glass-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+  color: #dff6e1;
+}
+
+.product-main-img {
+  transition: transform 350ms cubic-bezier(.2,.9,.4,1), box-shadow 200ms;
+  will-change: transform;
+  border-radius: 12px;
+}
+
+/* accent color uses spotify-like green */
+:host {
+  --accent-color: #1DB954;
+}
+
+.text-accent {
+  color: var(--accent-color);
+}
+
+.selected-size {
+  background: rgba(29,185,84,0.14);
+  color: #eaffef;
+  border: 1px solid rgba(29,185,84,0.35);
+  box-shadow: 0 6px 20px rgba(29,185,84,0.04);
+}
+.unselected-size {
+  background: rgba(255,255,255,0.02);
+  color: #cfead9;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* btn overrides */
+.btn-accent {
+  background: linear-gradient(90deg, var(--accent-color), #14a84a);
+  color: #04140b;
+  font-weight: 700;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #dff6e1;
+  border-color: rgba(255,255,255,0.04);
+}

@@ -75,7 +75,7 @@ export class CartService {
       const guestItems: CartItem[] = guestData ? JSON.parse(guestData) : [];
       const userItems: CartItem[] = userData ? JSON.parse(userData) : [];
 
-      if (guestItems.length === 0) return; // nothing to merge
+      if (guestItems.length === 0) return; 
 
       // Combine carts safely
       const merged = [...userItems];

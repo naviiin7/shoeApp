@@ -1,101 +1,90 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+// src/app/shared/components/mini-cart/mini-cart.component.ts
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { trigger, transition, style, animate } from '@angular/animations';
-import { CartService, CartItem } from '../../../core/services/cart.service';
-import { CartUiService } from '../../../core/services/cart-ui.service';
+import { CartService } from 'src/app/core/services/cart.service';
+import { CartUiService } from 'src/app/core/services/cart-ui.service';
+import { OrderService } from 'src/app/core/services/order.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mini-cart',
   templateUrl: './mini-cart.component.html',
-  styleUrls: ['./mini-cart.component.scss'],
-  animations: [
-    trigger('fadeInOut', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('200ms ease-out', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('150ms ease-in', style({ opacity: 0 }))
-      ])
-    ]),
-    trigger('slideInOut', [
-      transition(':enter', [
-        style({ transform: 'translateX(100%)' }),
-        animate('300ms cubic-bezier(.16,1,.3,1)', style({ transform: 'translateX(0)' }))
-      ]),
-      transition(':leave', [
-        animate('250ms ease-in', style({ transform: 'translateX(100%)' }))
-      ])
-    ])
-  ]
+  styleUrls: ['./mini-cart.component.scss']
 })
 export class MiniCartComponent implements OnInit, OnDestroy {
-  visible = false;
-  items: CartItem[] = [];
-  subtotal = 0;
-
-  private subs: Subscription[] = [];
+  open = false;
+  items: { product: any; qty: number }[] = [];
+  subs: Subscription[] = [];
+  submitting = false;
 
   constructor(
     private cart: CartService,
     private ui: CartUiService,
-    private router: Router,
-    private zone: NgZone,
-    private cdr: ChangeDetectorRef
+    private orders: OrderService,
+    private router: Router
   ) {}
 
-  ngOnInit(): void {
-    // 👁 Listen for visibility state
-    const subUi = this.ui.visible$.subscribe((v: boolean) => {
-      this.zone.run(() => {
-        this.visible = v;
-        this.cdr.detectChanges();
-      });
-    });
-    this.subs.push(subUi);
+  ngOnInit() {
+    // subscribe to UI open observable
+    this.subs.push(this.ui.open$.subscribe((v) => {
+      this.open = !!v;
+      // helpful debug log
+      // console.log('[MiniCart] open$', v);
+    }));
 
-    // 🛒 Listen for cart updates
-    const subCart = this.cart.cart$.subscribe((items: CartItem[]) => {
-      this.zone.run(() => {
-        this.items = items || [];
-        this.subtotal = this.cart.getTotalPrice();
-        this.cdr.detectChanges();
-      });
-    });
-    this.subs.push(subCart);
+    // subscribe to cart items
+    this.subs.push(this.cart.cart$.subscribe(items => {
+      this.items = Array.isArray(items) ? items : [];
+    }));
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subs.forEach(s => s.unsubscribe());
+    this.subs = [];
   }
 
-  increase(it: CartItem): void {
-    this.cart.add(it.product, 1);
-  }
-
-  decrease(it: CartItem): void {
-    if (it.qty <= 1) this.remove(it);
-    else this.cart.add(it.product, -1);
-  }
-
-  remove(it: CartItem): void {
-    this.cart.remove(it.product.id);
-  }
-
-  // ✅ Checkout button stays the same
-  checkout(): void {
+  close() {
     this.ui.close();
-    this.router.navigate(['/checkout']);
   }
 
-  // ✅ NEW: Continue button → goes to main cart page
-  continue(): void {
-    this.ui.close();
-    this.router.navigate(['/cart']);
+  openCart() {
+    this.ui.open();
   }
 
-  close(): void {
-    this.ui.close();
+  getTotal(): number {
+    return this.items.reduce((sum, it) => sum + ((it.product?.price ?? 0) * (it.qty ?? 1)), 0);
+  }
+
+  checkoutFromMiniCart() {
+    const shipping = JSON.parse(localStorage.getItem('sv_checkout_shipping') || 'null');
+    const paymentRaw = localStorage.getItem('sv_checkout_payment');
+    let payment: any = paymentRaw;
+    try { payment = paymentRaw ? JSON.parse(paymentRaw) : paymentRaw; } catch {}
+
+    if (!shipping || !payment) {
+      this.close();
+      this.router.navigate(['/checkout/shipping']);
+      return;
+    }
+
+    if (!this.items || this.items.length === 0) return;
+
+    const total = this.getTotal();
+
+    this.submitting = true;
+    this.orders.createOrder(this.items, shipping, payment, total).subscribe({
+      next: (order) => {
+        this.cart.clear();
+        this.close();
+        this.router.navigate(['/checkout/success'], { state: { orderId: order.id }});
+      },
+      error: (err) => {
+        console.error('Mini-cart checkout failed', err);
+        this.submitting = false;
+      },
+      complete: () => {
+        this.submitting = false;
+      }
+    });
   }
 }

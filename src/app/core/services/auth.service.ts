@@ -71,7 +71,7 @@ export class AuthService {
       id: 'u-' + Date.now(),
       name,
       email,
-      password, // MUST keep the password for login to compare
+      password,
       role
     };
 
@@ -85,7 +85,6 @@ export class AuthService {
     const users = this.loadAllUsers();
     const found = users.find(u => u.email === email);
 
-    // FIXED: compare password separately
     if (!found || found.password !== password) {
       return of(false);
     }

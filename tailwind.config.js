@@ -7,15 +7,16 @@ module.exports = {
         body: ['Inter', 'system-ui', 'sans-serif']
       },
       colors: {
-        brand: '#53CAEC',
-        deep: '#171412',
-        cream: '#F3F0EA'
-      },
-      keyframes: {
-        revealLeft: { '0%': { opacity: 0, transform: 'translateX(-20px)' }, '100%': { opacity: 1, transform: 'translateX(0)' } }
-      },
-      animation: {
-        'reveal-left': 'revealLeft .6s cubic-bezier(.2,.9,.2,1) both'
+        spotify: {
+          500: '#1DB954' // main accent
+        },
+        matte: {
+          50: '#f5f6f7',
+          100: '#e9ecef',
+          500: '#2b2f33',
+          700: '#131416',
+          900: '#080909'
+        }
       }
     }
   },

@@ -5,12 +5,13 @@ import { CartItem } from './cart.service';
 
 export interface Order {
   id: string;
+  userId?: string;
   items: CartItem[];
   shipping: any;
-  payment: string;
+  payment: any;
   total: number;
   date: string;
-  userId: string;   // ← ADDED
+  status?: string;
 }
 
 const ORDERS_KEY = 'sv_orders';
@@ -19,12 +20,11 @@ const ORDERS_KEY = 'sv_orders';
   providedIn: 'root'
 })
 export class OrderService {
-
   constructor() {}
 
   private loadOrders(): Order[] {
     try {
-      return JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+      return JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]') as Order[];
     } catch {
       return [];
     }
@@ -34,25 +34,34 @@ export class OrderService {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(list));
   }
 
-  /** Create a new order */
+  /** Create an order. userId optional; if omitted, stores 'guest' */
   createOrder(
     items: CartItem[],
     shipping: any,
-    payment: string,
-    total: number,
-    userId: string
+    payment: any,
+    total?: number,
+    userId?: string
   ): Observable<Order> {
-
     const orders = this.loadOrders();
+
+    // compute total if not provided
+    const calc = (items || []).reduce((s, it) => {
+      const price = (it.product && (it.product as any).price) ?? (it as any).price ?? 0;
+      const qty = (it.qty ?? 1);
+      return s + (price * qty);
+    }, 0);
+
+    const newTotal = Number(total ?? calc ?? 0);
 
     const newOrder: Order = {
       id: 'ord-' + Date.now(),
-      items,
-      shipping,
-      payment,
-      total,
+      userId: userId || 'guest',
+      items: items || [],
+      shipping: shipping || {},
+      payment: payment || {},
+      total: newTotal,
       date: new Date().toISOString(),
-      userId: userId || 'guest'   // ← VERY IMPORTANT
+      status: 'Placed'
     };
 
     orders.push(newOrder);
@@ -61,13 +70,16 @@ export class OrderService {
     return of(newOrder);
   }
 
-  /** Get all orders */
   getAllOrders(): Observable<Order[]> {
     return of(this.loadOrders());
   }
 
-  /** Get one order by ID */
+  getOrdersForUser(userId: string): Observable<Order[]> {
+    const list = this.loadOrders().filter(o => String(o.userId) === String(userId));
+    return of(list);
+  }
+
   getOrderById(id: string): Order | undefined {
-    return this.loadOrders().find(o => o.id === id);
+    return this.loadOrders().find(o => String(o.id) === String(id));
   }
 }

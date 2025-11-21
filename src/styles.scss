@@ -1,17 +1,54 @@
-/* ✅ Tailwind core layers */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* -------------------------------------------
+   GLOBAL STYLES (SAFE — NO OVERRIDES TO COMPONENTS)
+   ------------------------------------------- */
 
-/* ✅ Optional custom global variables */
-:root {
-  --header-height: 72px;
-}
-
-/* ✅ Push content below fixed header */
-body {
-  padding-top: var(--header-height);
-  background-color: #fff; /* optional, helps with white header background */
-}
-
-/* ✅ You can keep your own global overrides below if needed */
+   @tailwind base;
+   @tailwind components;
+   @tailwind utilities;
+   
+   /* Global variables */
+   :root {
+     --header-height: 72px;
+   }
+   
+   /* ---------------------------------------------------
+      BODY — FIXES THE WHITE SCREEN + FIXES NAVBAR GAP
+      --------------------------------------------------- */
+   body {
+     padding-top: var(--header-height);
+     background-color: #080b0f !important; /* Dark base theme */
+     color: #e8eef5;
+     overflow-x: hidden;
+     margin: 0;
+   }
+   
+   /* ---------------------------------------------------
+      GLOBAL SMOOTHING + LOOK
+      --------------------------------------------------- */
+   html {
+     scroll-behavior: smooth;
+   }
+   
+   /* Hero image hover (does NOT affect other images) */
+   .hero-image {
+     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+     will-change: transform;
+   }
+   
+   .hero-image:hover {
+     transform: scale(1.06);
+   }
+   
+   /* Container utility (fallback if Tailwind isn't applied) */
+   .container {
+     max-width: 1200px;
+     margin-left: auto;
+     margin-right: auto;
+   }
+   
+   body {
+    background: #070b0e !important;
+    margin: 0;
+    padding: 0;
+  }
+  

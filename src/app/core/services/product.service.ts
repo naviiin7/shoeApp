@@ -1,4 +1,3 @@
-// src/app/core/services/product.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
@@ -102,22 +101,23 @@ export class ProductService {
       price: 79 + (i % 5) * 10 + (i % 3) * 5,
       sizes: [7, 8, 9, 10, 11],
       inStock: i % 8 !== 0,
-
-
       image: this.realImages[i % this.realImages.length]
     }))
   ];
 
   constructor() {}
 
-  
-
   getAllProducts(): Observable<Product[]> {
     return of(this.products);
   }
 
-  getProductById(id: number): Observable<Product | undefined> {
-    return of(this.products.find(p => p.id === id));
+  /**
+   * Robust get by id — accepts number or string. Uses loose equality
+   * to allow '12' and 12 to match. This prevents accidental redirects
+   * if a string param is passed to a numeric lookup.
+   */
+  getProductById(id: string | number): Observable<Product | undefined> {
+    return of(this.products.find(p => p.id == id)); // intentionally using == for coercive match
   }
 
   getProduct(id: string | number): Observable<Product | undefined> {

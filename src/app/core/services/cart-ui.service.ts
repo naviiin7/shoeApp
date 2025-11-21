@@ -2,21 +2,37 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class CartUiService {
-  private visibleSubject = new BehaviorSubject<boolean>(false);
-  visible$ = this.visibleSubject.asObservable();
+  // public observable other components can subscribe to
+  private _open$ = new BehaviorSubject<boolean>(false);
+  public readonly open$ = this._open$.asObservable();
 
-  toggle(): void {
-    const next = !this.visibleSubject.value;
-    setTimeout(() => this.visibleSubject.next(next), 0);
-  }
+  constructor() {}
 
+  // Open the mini-cart
   open(): void {
-    this.visibleSubject.next(true);
+    this._open$.next(true);
   }
 
+  // Close the mini-cart
   close(): void {
-    this.visibleSubject.next(false);
+    this._open$.next(false);
+  }
+
+  // Toggle open state. If `value` provided, set explicitly.
+  toggle(value?: boolean): void {
+    if (typeof value === 'boolean') {
+      this._open$.next(value);
+    } else {
+      this._open$.next(!this._open$.value);
+    }
+  }
+
+  // Immediate sync check
+  isOpen(): boolean {
+    return this._open$.value;
   }
 }

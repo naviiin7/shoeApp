@@ -1,1 +1,140 @@
-:host { display:block; }
+.mini-cart-panel {
+    position: fixed;
+    top: 90px;
+    right: 24px;
+    width: 350px;
+    padding: 16px;
+    z-index: 50;
+    border-radius: 16px;
+  
+    background: rgba(15, 15, 20, 0.92);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.45),
+                0 0 18px rgba(176, 38, 255, 0.35);
+  }
+  
+  /* HEADER */
+  .mini-cart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    color: #e2e2ff;
+  
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      text-shadow: 0 0 6px #b026ff;
+    }
+  
+    button {
+      color: #aaa;
+      transition: 0.2s;
+    }
+  
+    button:hover {
+      color: #fff;
+    }
+  }
+  
+  /* EMPTY CART */
+  .empty-cart {
+    text-align: center;
+    color: #bbb;
+  }
+  
+  .empty-cart-link {
+    color: #00e5ff;
+    text-shadow: 0 0 6px #00e5ff;
+  }
+  
+  /* ITEMS */
+  .mini-cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .item-info {
+    flex: 1;
+    color: #ddddff;
+    font-size: 0.875rem;
+  }
+  
+  .item-name {
+    font-weight: 600;
+  }
+  
+  .item-qty {
+    color: #aaa;
+    font-size: 0.75rem;
+  }
+  
+  .item-price {
+    font-weight: 600;
+    color: #00e5ff;
+    text-shadow: 0 0 8px #00e5ff;
+  }
+  
+  /* TOTAL */
+  .mini-cart-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    color: #ccc;
+    font-size: 0.95rem;
+  }
+  
+  .total-amount {
+    font-size: 1.2rem;
+    color: #b026ff;
+    text-shadow: 0 0 10px #b026ff;
+  }
+  
+  /* BUTTONS */
+  .mini-cart-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-checkout {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+  
+    background: linear-gradient(135deg, #00e5ff, #b026ff);
+    color: black;
+    font-weight: 600;
+  
+    box-shadow: 0 0 12px #00e5ff, 0 0 12px #b026ff;
+    transition: 0.3s;
+  }
+  
+  .btn-checkout:hover {
+    filter: brightness(1.15);
+  }
+  
+  .btn-open-cart {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    color: #e2e2ff;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .btn-open-cart:hover {
+    background: rgba(255,255,255,0.06);
+  }
+  

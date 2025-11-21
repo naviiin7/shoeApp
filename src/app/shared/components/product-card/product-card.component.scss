@@ -1,0 +1,36 @@
+/* DARK NEON PRODUCT CARD — SAFE, SCOPED, ZERO SIDE EFFECTS */
+
+.product-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 14px;
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.55);
+  }
+  
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.65);
+  }
+  
+  .image img {
+    transition: transform .35s ease;
+  }
+  
+  .image:hover img {
+    transform: scale(1.05);
+  }
+  
+  .name {
+    color: #e8f5ff;
+  }
+  
+  .brand {
+    color: #9fb4c1;
+  }
+  
+  .price {
+    color: #00e5ff;
+  }
+  

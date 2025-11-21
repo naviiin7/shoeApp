@@ -1,1 +1,75 @@
-:host { display:block; }
+/* Dark neon safe theme — NO side effects outside this component */
+
+.products-page-wrapper {
+  background: #070b0e; /* dark background restored */
+}
+
+/* FILTER BAR */
+.filter-bar {
+  background: rgba(18, 22, 28, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: #dbeefd;
+}
+
+/* Compact selects */
+.compact-select {
+  background: rgba(255,255,255,0.04);
+  color: #dbeefd;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+/* Search input */
+.search-input {
+  background: rgba(255,255,255,0.04);
+  color: #dbeefd;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.text-muted {
+  color: rgba(220, 230, 240, 0.55);
+}
+
+/* Product cards */
+.product-card-upgraded {
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+  transition: transform 240ms, box-shadow 240ms;
+}
+
+.product-card-upgraded:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+}
+
+.image-frame {
+  width: 100%;
+  height: 220px;
+  background: #0d1114;
+}
+
+.product-image-upgraded {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-accent {
+  color: #00E5FF !important;
+}
+
+/* Pagination */
+.page-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: #dbeefd;
+}

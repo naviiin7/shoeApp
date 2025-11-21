@@ -19,10 +19,14 @@ export class PaymentComponent {
 
   pay() {
     this.submitting = true;
-
     setTimeout(() => {
-      localStorage.setItem('sv_checkout_payment', this.method);
+      // store payment as simple string — you can expand this later
+      localStorage.setItem('sv_checkout_payment', JSON.stringify({ method: this.method }));
       this.router.navigate(['/checkout/success']);
     }, 900);
+  }
+
+  goBack() {
+    this.router.navigate(['/checkout/shipping']);
   }
 }

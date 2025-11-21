@@ -1,22 +1,174 @@
-/* header component local styles — only affects header */
+/* Header component scoped styles
+   Replace this file only. Focused, defensive rules to avoid side effects.
+*/
+
+/* Local tokens */
+$neon-blue: #00E5FF;
+$neon-purple: #B026FF;
+$text-light: #e6eef2;
+$header-dark: #0d1114;
+
+/* Header shell (keeps it dark, subtle glass) */
+.header-glass {
+  background: linear-gradient(180deg, rgba(13,16,18,0.98), rgba(9,11,13,0.98));
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px);
+  color: $text-light;
+  will-change: transform, background;
+}
+
+/* Ensure header content stays vertically centered */
 .site-header {
   height: 72px;
-  .container {
+  z-index: 60;
+
+  /* container guard (in case tailwind doesn't apply) */
+  .container, .max-w-7xl {
     max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* force the internal flex to center items vertically (brings nav down) */
+  > .container > .flex,
+  .header-inner > .flex,
+  .flex {
+    align-items: center !important;
+    min-height: 72px;
   }
 }
 
-/* small visual polish for scrolled state if JS adds classes */
-.site-header.bg-white\/80 {
-  backdrop-filter: blur(6px);
+/* Logo capsule (SV) */
+.logo-capsule {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow:
+    0 6px 18px rgba($neon-blue, 0.02),
+    0 6px 18px rgba($neon-purple, 0.02),
+    inset 0 0 8px rgba($neon-purple, 0.02);
 }
 
-/* ensure header content doesn't wrap unexpectedly */
-.site-header .flex {
+/* Neon SV text — purple primary, subtle glow.
+   Using background-clip so text appears neon without affecting other elements.
+*/
+.logo-text {
+  font-weight: 800;
+  font-size: 0.95rem;
+  background: linear-gradient(90deg, $neon-purple 0%, $neon-blue 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: 0 0 10px rgba($neon-purple, 0.12);
+}
+
+/* Wordmark next to capsule */
+.logo-title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-left: 6px;
+}
+.logo-main { color: $text-light; font-weight: 700; font-size: 1.05rem; }
+.logo-accent {
+  color: $neon-blue;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba($neon-blue, 0.06);
+}
+
+/* Nav center links (vertical centering ensured above) */
+.main-nav, nav {
+  gap: 24px;
   align-items: center;
 }
 
-/* keep the cart badge above everything */
-.site-header .relative .absolute {
-  z-index: 60;
+/* Nav link style — subtle neon hover */
+.nav-link {
+  background: transparent;
+  border: none;
+  color: rgba($text-light, 0.92);
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+/* Neon hover: glow and tiny lift */
+.nav-link:hover,
+.nav-link:focus {
+  color: $neon-blue;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba($neon-blue, 0.03), 0 4px 12px rgba($neon-purple, 0.02);
+}
+
+/* Actions on right */
+.actions-right { display: flex; align-items: center; gap: 10px; }
+
+/* Ghost/Logout button minimal style */
+.btn-ghost {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  color: #ffc7c0;
+}
+
+/* Neon Sign-up */
+.btn-neon {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, $neon-blue, $neon-purple);
+  color: #03121a;
+  font-weight: 700;
+  box-shadow: 0 8px 30px rgba($neon-blue, 0.05), 0 8px 30px rgba($neon-purple, 0.03);
+  text-decoration: none;
+}
+
+
+/* Cart badge */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, $neon-purple, $neon-blue);
+  color: #02120b;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.cart-icon {
+  color: #e6eef2 !important;
+  stroke: #e6eef2 !important;
+}
+
+/* FORCE cart icon visibility — header scoped */
+:host ::ng-deep .cart-icon,
+.cart-btn .cart-icon,
+.cart-btn svg {
+  stroke: #e6eef2 !important;
+  color: #e6eef2 !important;
+  fill: none !important;
+  opacity: 1 !important;
+}
+
+.cart-btn svg path,
+.cart-btn svg circle {
+  stroke: #e6eef2 !important;
 }

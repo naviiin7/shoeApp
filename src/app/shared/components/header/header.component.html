@@ -1,53 +1,65 @@
 <header
-  class="site-header fixed top-0 left-0 w-full z-50 bg-white shadow-sm transition-transform duration-300"
+  class="site-header fixed top-0 left-0 w-full z-50 header-glass transition-transform duration-300"
   [ngClass]="{
     '-translate-y-full': hidden,
-    'bg-white/80 backdrop-blur': scrolled,
-    'bg-transparent': !scrolled
+    'header-scrolled': scrolled
   }"
   role="banner"
 >
-  <div class="container mx-auto px-6">
+  <div class="container mx-auto px-6 header-inner">
     <div class="flex items-center justify-between h-[72px]">
-      <!-- logo -->
-      <a routerLink="/" class="flex items-center gap-3 shrink-0">
-        <div class="bg-sky-500 text-white font-bold rounded-md px-3 py-2 text-sm">SV</div>
-        <span class="font-bold text-gray-800 text-lg">Shoe<span class="text-sky-500">Verse</span></span>
+
+      <!-- LOGO — Inline capsule + wordmark -->
+      <a routerLink="/" class="flex items-center gap-3 shrink-0 logo-wrap" aria-label="ShoeVerse home">
+        <div class="logo-capsule" aria-hidden="true">
+          <span class="logo-text">SV</span>
+        </div>
+
+        <span class="logo-title" aria-hidden="true">
+          <span class="logo-main">Shoe</span><span class="logo-accent">Verse</span>
+        </span>
       </a>
 
-      <!-- nav -->
-      <nav class="hidden md:flex items-center gap-6 text-sm text-gray-700">
-        <a (click)="navigateToSection('hero')" class="hover:text-sky-600 cursor-pointer">Home</a>
-        <a (click)="navigateToSection('products')" class="hover:text-sky-600 cursor-pointer">Shop</a>
-        <a (click)="navigateToFooter()" class="hover:text-sky-600 cursor-pointer">About</a>
-        <a (click)="navigateToSection('contact')" class="hover:text-sky-600 cursor-pointer">Contact</a>
+      <!-- NAV: center on desktop (absolutely positioned), hidden on small -->
+      <nav class="main-nav hidden md:flex items-center gap-8 text-sm" role="navigation" aria-label="Main navigation">
+        <button class="nav-link" (click)="navigateToSection('hero')">Home</button>
+        <a class="nav-link" routerLink="/shop">Shop</a>
+        <a class="nav-link" routerLink="/orders">My Orders</a>
+        <button class="nav-link" (click)="navigateToFooter()">About</button>
+        <button class="nav-link" (click)="navigateToSection('contact')">Contact</button>
       </nav>
 
-      <!-- right actions -->
-      <div class="flex items-center gap-3">
+      <!-- RIGHT ACTIONS -->
+      <div class="flex items-center gap-4 actions-right">
+
+        <!-- AUTH AREA -->
         <ng-container *ngIf="currentUser; else guestLinks">
-          <span class="text-sm text-gray-700 hidden sm:inline">Hi, {{ currentUser.name }}</span>
-          <a *ngIf="currentUser?.role === 'admin'" routerLink="/admin" class="text-sm text-sky-600 hover:underline">Admin</a>
-          <button (click)="logout()" class="text-sm text-gray-600 hover:text-red-500">Logout</button>
+          <span class="user-greeting hidden sm:inline text-sm">Hi, {{ currentUser.name }}</span>
+
+          <a *ngIf="currentUser?.role === 'admin'"
+             routerLink="/admin"
+             class="nav-link nav-admin"
+             aria-label="Admin area">Admin</a>
+
+          <button (click)="logout()" class="btn-ghost logout-btn" aria-label="Logout">Logout</button>
         </ng-container>
 
+        <!-- GUEST LINKS -->
         <ng-template #guestLinks>
-          <a routerLink="/auth/login" class="text-sm px-3 py-1 rounded hover:bg-gray-100">Login</a>
-          <a routerLink="/auth/register" class="text-sm px-3 py-1 rounded bg-sky-500 text-white hover:bg-sky-600">Sign Up</a>
+          <a routerLink="/auth/login" class="nav-link">Login</a>
+          <a routerLink="/auth/register" class="btn-neon">Sign Up</a>
         </ng-template>
 
-        <!-- mini cart button -->
-        <button (click)="openMiniCart()" class="relative p-2 rounded-md hover:bg-gray-100" aria-label="Open cart">
-          <!-- simple svg cart (guaranteed to render) -->
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <!-- MINI CART BUTTON -->
+        <button (click)="openMiniCart()" class="cart-btn relative" aria-label="Open cart">
+          <svg class="cart-icon" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
             <path d="M6 6h15l-1.5 9h-11L4 3H2"></path>
             <circle cx="10" cy="20" r="1.5"></circle>
             <circle cx="18" cy="20" r="1.5"></circle>
           </svg>
 
-          <span *ngIf="cartCount > 0" class="absolute -top-2 -right-2 bg-sky-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {{ cartCount }}
-          </span>
+          <span *ngIf="cartCount > 0" class="cart-badge" aria-live="polite">{{ cartCount }}</span>
         </button>
       </div>
     </div>
